@@ -8,14 +8,26 @@ on:
 jobs:
   test:
     name: pytest (${{ matrix.python-version }})
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        # ubuntu-latest is Ubuntu 26.04, whose oldest Python build is 3.10;
+        # pin the 3.9 leg to Ubuntu 24.04, which still ships 3.9 builds.
+        include:
+          - python-version: "3.9"
+            os: ubuntu-24.04
+          - python-version: "3.10"
+            os: ubuntu-latest
+          - python-version: "3.11"
+            os: ubuntu-latest
+          - python-version: "3.12"
+            os: ubuntu-latest
+          - python-version: "3.13"
+            os: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install test tooling (the library itself has zero dependencies)
@@ -27,8 +39,8 @@ jobs:
     name: example pipelines
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Run every example pipeline end to end
@@ -43,8 +55,8 @@ jobs:
     name: zero-dependency audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Prove only the standard library is imported
