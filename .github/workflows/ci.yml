@@ -1,39 +1,51 @@
-"""Prove that importing PipeDream pulls in nothing but the standard library.
+name: CI
 
-Run with ``python -S scripts/audit_stdlib.py`` — the ``-S`` flag disables
-site-packages, so any accidental third-party import fails loudly instead of
-silently borrowing from the local environment.  CI runs this on every push.
-"""
-import os
-import sys
+on:
+  push:
+    branches: [main]
+  pull_request:
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, ROOT)
+jobs:
+  test:
+    name: pytest (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test tooling (the library itself has zero dependencies)
+        run: python -m pip install --upgrade pip pytest
+      - name: Run the test suite
+        run: pytest -v
 
-import pipedream                    # noqa: E402
-import pipedream.cache              # noqa: E402
-import pipedream.cli               # noqa: E402
-import pipedream.dag                # noqa: E402
-import pipedream.data               # noqa: E402
-import pipedream.engine             # noqa: E402
-import pipedream.render             # noqa: E402
-import pipedream.steps              # noqa: E402
+  examples:
+    name: example pipelines
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run every example pipeline end to end
+        run: |
+          for pipeline in examples/*.py; do
+            echo "::group::python -m pipedream run $pipeline"
+            python -m pipedream run "$pipeline" --no-cache
+            echo "::endgroup::"
+          done
 
-if not hasattr(sys, "stdlib_module_names"):  # Python 3.10+
-    print("SKIP: sys.stdlib_module_names requires Python 3.10+")
-    raise SystemExit(0)
-
-foreign = (
-    {module.split(".")[0] for module in sys.modules}
-    - set(sys.stdlib_module_names)
-    - {"pipedream", "__main__"}
-)
-
-if foreign:
-    print("FAIL: non-stdlib modules imported: " + ", ".join(sorted(foreign)))
-    raise SystemExit(1)
-
-print(
-    f"OK: pipedream {pipedream.__version__} imports cleanly on "
-    f"Python {sys.version.split()[0]} with zero third-party modules."
-)
+  stdlib-audit:
+    name: zero-dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Prove only the standard library is imported
+        run: python -S scripts/audit_stdlib.py
