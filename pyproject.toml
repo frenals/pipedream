@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pipedream-orchestrator"
+version = "0.1.0"
+description = "A zero-dependency DAG orchestrator for data science pipelines — pure standard-library Python."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Frenals" }]
+keywords = [
+    "pipeline", "dag", "orchestrator", "data-engineering", "etl",
+    "data-science", "workflow", "zero-dependency",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = []  # <- the entire point
+
+[project.scripts]
+pipe = "pipedream.cli:main"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["pipedream*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
