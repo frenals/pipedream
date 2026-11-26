@@ -61,3 +61,16 @@ jobs:
           python-version: "3.12"
       - name: Prove only the standard library is imported
         run: python -S scripts/audit_stdlib.py
+
+  workflow-lint:
+    name: workflow lint (cron + structure)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Validate cron syntax and workflow structure
+        run: |
+          python -m pip install --upgrade pip pyyaml
+          python scripts/validate_workflows.py

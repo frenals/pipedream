@@ -6,7 +6,7 @@ name: Earthquake monitor
 # reports/earthquakes.md so the repo itself is the dashboard.
 on:
   schedule:
-    - cron: "0 */12 * *" # at 00:00 and 12:00 UTC
+    - cron: "0 */12 * * *" # at 00:00 and 12:00 UTC
   workflow_dispatch: # allow manual runs from the Actions tab
 
 # The default GITHUB_TOKEN is read-only; the report commit needs write.
