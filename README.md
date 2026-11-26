@@ -289,6 +289,48 @@ Everything the CLI does is also plain Python: `pipeline.run()`,
 | `examples/01_sales_report.py` | ETL shape: two extractions, parallel transforms, a report step |
 | `examples/02_churn_scoring.py` | Feature engineering, scoring, pure-Python model metrics |
 | `examples/03_fan_out_fan_in.py` | Parallel fan-out/fan-in with a visible speedup |
+| `examples/04_earthquake_monitor.py` | **Real data, live schedule**: global quake activity from the USGS Feed API, refreshed every 12 h by GitHub Actions |
+
+## Live from the real world
+
+Everything above runs on synthetic data, which keeps the tour offline and
+deterministic. But the whole point of an orchestrator is the real world, so
+`examples/04_earthquake_monitor.py` runs on **live data with a real
+schedule** — no API key, no extra packages, still pure standard library:
+
+- **Extract** every earthquake on Earth of magnitude 2.5+ from the
+  [USGS real-time Feed API](https://earthquake.usgs.gov/fdsnws/event/1/),
+  with three retries and exponential backoff for the inevitable network
+  hiccup.
+- **Fan out** to four parallel aggregations: counts per magnitude band,
+  a per-UTC-hour histogram, the strongest quake, and the quake most
+  reported as felt by people nearby.
+- **Report** to `reports/earthquakes.md` — a markdown dashboard of the
+  last 24 hours, regenerated on every run.
+- **Schedule**: the [Earthquake monitor
+  workflow](.github/workflows/earthquakes.yml) runs the pipeline every
+  12 hours on GitHub Actions and commits the refreshed report back to
+  this repo — the repository is its own dashboard, and the commit history
+  *is* the time series.
+
+The example is also a lesson in cache discipline. `fetch` and `report`
+declare `cache=False`: the world changes even when their code doesn't, so
+those steps must run every time. The four aggregations stay cacheable —
+they are pure functions of the fetched events — so an unchanged window
+costs nothing. On a typical run:
+
+```text
+  ✓ fetch ......................... ok 1.08s     ← cache=off: hits the API
+  ↻ by_band ....................... cached cache hit
+  ↻ by_hour ....................... cached cache hit
+  ↻ largest ....................... cached cache hit
+  ↻ top_felt ...................... cached cache hit
+  ✓ report ........................ ok 0.00s     ← cache=off: fresh timestamp
+```
+
+Parameters work here too: `--param hours=6` narrows the window, and because
+parameters are part of the cache key, the 6-hour view caches separately
+from the 24-hour one.
 
 ## Honest limitations
 
@@ -341,13 +383,14 @@ python -S scripts/audit_stdlib.py   # prove only stdlib gets imported
 
 Every push to `main` and every pull request runs the workflow in
 `.github/workflows/ci.yml` — the CI badge at the top of this page is its
-live status. Three jobs:
+live status. Four jobs:
 
 | Job | What it proves |
 | --- | --- |
 | `pytest (3.9 … 3.13)` | The 55-test suite passes on every supported Python version. The 3.9 leg is pinned to `ubuntu-24.04` because the default runner image (Ubuntu 26.04) has no Python 3.9 build. |
 | `example pipelines` | Every `examples/*.py` runs end to end with `--no-cache`, so the examples shown above can never silently rot. |
 | `zero-dependency audit` | Imports the whole package with `site-packages` disabled (`python -S scripts/audit_stdlib.py`); a single third-party import fails the build, so the zero-dependency promise is enforced on every commit — not by vibes. |
+| `workflow lint` | Runs `scripts/validate_workflows.py` over every workflow in `.github/workflows/`: cron expressions must be valid five-field syntax and the YAML structure must be sound. This job exists because a four-field cron string once shipped and silently killed a scheduled workflow at parse time — never again. |
 
 ## License
 
