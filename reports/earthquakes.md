@@ -4,64 +4,60 @@ Every earthquake on Earth of magnitude 2.5 or greater in the last 24 hours, stra
 
 | generated (UTC) | events | busiest hour |
 | --- | --- | --- |
-| 2026-11-27 00:58 | 37 | 4 quakes |
+| 2026-11-27 20:41 | 24 | 4 quakes |
 
 ## By magnitude band
 
 | band | events | strongest |
 | --- | --- | --- |
 | M 6.0+   (strong) | 0 | - |
-| M 5.0-5.9 (moderate) | 7 | M 5.7 — Revilla Gigedo Islands region |
-| M 4.0-4.9 (light) | 9 | M 4.8 — 225 km S of Taliwang, Indonesia |
-| M 2.5-3.9 (minor) | 21 | M 3.9 — 72 km N of Charlotte Amalie, U.S. Virgin Islands |
+| M 5.0-5.9 (moderate) | 3 | M 5.1 — 107 km SSE of Auki, Solomon Islands |
+| M 4.0-4.9 (light) | 5 | M 4.8 — 183 km SSE of Vilyuchinsk, Russia |
+| M 2.5-3.9 (minor) | 16 | M 3.8 — 132 km NNW of Nikolski, Alaska |
 
 ## Events per UTC hour
 
 | hour (UTC) | events | histogram |
 | --- | --- | --- |
-| 11-26 01:00 | 4 | ████ |
-| 11-26 02:00 | 3 | ███ |
-| 11-26 03:00 | 2 | ██ |
-| 11-26 05:00 | 1 | █ |
-| 11-26 06:00 | 2 | ██ |
-| 11-26 07:00 | 2 | ██ |
-| 11-26 08:00 | 1 | █ |
-| 11-26 09:00 | 4 | ████ |
-| 11-26 12:00 | 2 | ██ |
-| 11-26 14:00 | 2 | ██ |
-| 11-26 15:00 | 2 | ██ |
-| 11-26 16:00 | 1 | █ |
-| 11-26 18:00 | 1 | █ |
-| 11-26 19:00 | 1 | █ |
-| 11-26 20:00 | 1 | █ |
 | 11-26 21:00 | 2 | ██ |
 | 11-26 22:00 | 4 | ████ |
-| 11-26 23:00 | 1 | █ |
+| 11-26 23:00 | 2 | ██ |
 | 11-27 00:00 | 1 | █ |
+| 11-27 02:00 | 1 | █ |
+| 11-27 04:00 | 2 | ██ |
+| 11-27 07:00 | 1 | █ |
+| 11-27 10:00 | 1 | █ |
+| 11-27 11:00 | 1 | █ |
+| 11-27 12:00 | 3 | ███ |
+| 11-27 13:00 | 1 | █ |
+| 11-27 14:00 | 2 | ██ |
+| 11-27 16:00 | 1 | █ |
+| 11-27 17:00 | 1 | █ |
+| 11-27 18:00 | 1 | █ |
 
 ## Strongest quake in the window
 
 | field | value |
 | --- | --- |
-| magnitude | M 5.7 |
-| where | Revilla Gigedo Islands region |
-| when (UTC) | 2026-11-26 15:26:44 |
-| depth | 10 km |
-| coordinates | 19.81, -109.3 |
+| magnitude | M 5.1 |
+| where | 107 km SSE of Auki, Solomon Islands |
+| when (UTC) | 2026-11-27 00:07:00 |
+| depth | 74.1 km |
+| coordinates | -9.58, 161.24 |
 | tsunami flag | no |
 
-[USGS event page](https://earthquake.usgs.gov/earthquakes/eventpage/us6000udq5)
+[USGS event page](https://earthquake.usgs.gov/earthquakes/eventpage/us6000udt9)
 
 ## Most reported as felt
 
 | field | value |
 | --- | --- |
-| magnitude | M 3.6 |
-| where | 27 km NW of Ocotillo, CA |
-| felt by | 237 people |
-| when (UTC) | 2026-11-26 07:20:41 |
+| magnitude | M 2.8 |
+| where | 13 km E of Susitna North, Alaska |
+| felt by | 1 people |
+| when (UTC) | 2026-11-27 18:53:03 |
 
-[USGS event page](https://earthquake.usgs.gov/earthquakes/eventpage/ci41580392)
+[USGS event page](https://earthquake.usgs.gov/earthquakes/eventpage/aka2026xmyzzg)
 
 ---
 Gathered by [PipeDream](https://github.com/frenals/PipeDream) from the [USGS Feed API](https://earthquake.usgs.gov/fdsnws/event/1/). Refreshed every 12 hours by GitHub Actions.
